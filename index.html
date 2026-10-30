@@ -4,45 +4,542 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#20382f">
+  <meta name="description" content="Academic English resources for secondary learners.">
   <title>Faye's EAL Resource Hub</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --green: #20382f;
+      --green-light: #365447;
+      --gold: #b8955b;
+      --ink: #26332d;
+      --muted: #747a72;
+      --paper: #f7f6f2;
+      --white: #ffffff;
+      --line: #e5e2da;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 50px auto;
-      padding: 20px;
-      background: #f5f7fb;
-      color: #263247;
-      line-height: 1.6;
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .container {
+      width: min(1060px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .navbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--green);
+      color: #f7f3e9;
+      font-size: 22px;
+    }
+
+    .brand-name {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.035em;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      margin-top: 32px;
+      padding: 58px 52px;
+      border-radius: 10px;
+      color: var(--white);
+      background: linear-gradient(
+        115deg,
+        #1b3028 0%,
+        #29483b 62%,
+        #3c5a49 100%
+      );
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      right: -135px;
+      top: -170px;
+      border: 1px solid rgba(221, 201, 162, 0.24);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 38px rgba(221, 201, 162, 0.045),
+        0 0 0 76px rgba(221, 201, 162, 0.035);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #d4b982;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Manrope', sans-serif;
+      line-height: 1.3;
     }
 
     h1 {
-      color: #3157a4;
+      max-width: 650px;
+      margin: 0 0 18px;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.045em;
     }
 
-    .resource {
-      background: white;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 12px;
+    .hero-description {
+      max-width: 590px;
+      margin: 0 0 28px;
+      color: #e0e6df;
+      font-size: 16px;
+    }
+
+    .hero-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 17px;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      border-radius: 5px;
+      color: white;
+      background: rgba(255, 255, 255, 0.07);
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .hero-button:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    main {
+      padding: 48px 0 64px;
+    }
+
+    .section-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .section-top h2 {
+      margin: 0 0 7px;
+      font-size: 25px;
+      letter-spacing: -0.035em;
+    }
+
+    .section-top p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section-index {
+      color: #8d8068;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      white-space: nowrap;
+    }
+
+    .resource-list {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .resource-item {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 20px;
+      padding: 23px 25px;
+      border-bottom: 1px solid var(--line);
+      transition: background 0.2s ease;
+    }
+
+    .resource-item:last-child {
+      border-bottom: none;
+    }
+
+    .resource-item:hover {
+      background: #faf9f6;
+    }
+
+    .resource-number {
+      color: var(--gold);
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .resource-title {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 0 0 5px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .resource-description {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .resource-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #747a72;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .resource-status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #aaa99e;
+    }
+
+    .resource-status.available {
+      color: #35654a;
+    }
+
+    .resource-status.available::before {
+      background: #477b58;
+    }
+
+    .resource-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #35654a;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .resource-link:hover {
+      text-decoration: underline;
+    }
+
+    .vocabulary-section {
+      margin-top: 48px;
+    }
+
+    .vocabulary-card {
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--green);
+      border-radius: 6px;
+      background: var(--white);
+    }
+
+    .vocabulary-card h3 {
+      margin: 0 0 23px;
+      font-size: 20px;
+    }
+
+    .word-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .word {
+      padding-left: 15px;
+      border-left: 2px solid #c4ad82;
+    }
+
+    .word strong {
+      display: block;
+      margin-bottom: 6px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 15px;
+    }
+
+    .word p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer {
+      padding: 25px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        width: calc(100% - 28px);
+      }
+
+      .nav-inner {
+        min-height: 72px;
+      }
+
+      .brand-name {
+        font-size: 12px;
+      }
+
+      .brand-subtitle {
+        font-size: 9px;
+      }
+
+      .hero {
+        margin-top: 20px;
+        padding: 38px 25px;
+      }
+
+      .hero-description {
+        font-size: 14px;
+      }
+
+      main {
+        padding-top: 35px;
+      }
+
+      .section-top {
+        align-items: start;
+      }
+
+      .section-top h2 {
+        font-size: 22px;
+      }
+
+      .resource-item {
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 13px;
+        padding: 20px 16px;
+      }
+
+      .resource-status {
+        grid-column: 2;
+        white-space: normal;
+      }
+
+      .resource-title {
+        font-size: 15px;
+      }
+
+      .word-list {
+        grid-template-columns: 1fr;
+        gap: 19px;
+      }
+
+      .vocabulary-card {
+        padding: 23px 19px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *, *::before, *::after {
+        transition: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <h1>Welcome to Faye's EAL Resource Hub!</h1>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="brand-mark" aria-hidden="true">📚</div>
+      <div>
+        <div class="brand-name">FAYE'S EAL RESOURCE HUB</div>
+        <div class="brand-subtitle">SECONDARY ENGLISH LANGUAGE LEARNING</div>
+      </div>
+    </div>
+  </header>
 
-  <p>Building confidence in English, one resource at a time.</p>
-
-  <div class="resource">
-    <h2>Vocabulary Bank: Academic Words</h2>
-
-    <p><strong>Analyze:</strong> To examine something carefully.</p>
-
-    <p><strong>Compare:</strong> To identify similarities and differences.</p>
-
-    <p><strong>Evaluate:</strong> To judge the value or quality of something.</p>
+  <div class="container">
+    <section class="hero">
+      <p class="eyebrow">Learn with purpose</p>
+      <h1>Find your words. Build your voice.</h1>
+      <p class="hero-description">
+        Develop your academic English, strengthen essential skills,
+        and become a more confident and independent learner.
+      </p>
+      <a class="hero-button" href="#learning-areas">
+        Explore learning areas <span aria-hidden="true">↓</span>
+      </a>
+    </section>
   </div>
+
+  <main class="container">
+    <section id="learning-areas">
+      <div class="section-top">
+        <div>
+          <h2>Explore learning areas</h2>
+          <p>Choose a skill and continue building your English.</p>
+        </div>
+        <span class="section-index">01 — 05</span>
+      </div>
+
+      <div class="resource-list">
+        <article class="resource-item">
+          <div class="resource-number">01</div>
+          <div>
+            <h3 class="resource-title">📚 Vocabulary</h3>
+            <p class="resource-description">
+              Academic words and subject-specific language.
+            </p>
+            <a class="resource-link" href="#academic-vocabulary">
+              Explore vocabulary bank →
+            </a>
+          </div>
+          <span class="resource-status available">Available</span>
+        </article>
+
+        <article class="resource-item">
+          <div class="resource-number">02</div>
+          <div>
+            <h3 class="resource-title">🎧 Listening</h3>
+            <p class="resource-description">
+              Listening comprehension and identifying key information.
+            </p>
+          </div>
+          <span class="resource-status">Coming soon</span>
+        </article>
+
+        <article class="resource-item">
+          <div class="resource-number">03</div>
+          <div>
+            <h3 class="resource-title">🔎 Reading</h3>
+            <p class="resource-description">
+              Reading comprehension, inference and critical analysis.
+            </p>
+          </div>
+          <span class="resource-status">Coming soon</span>
+        </article>
+
+        <article class="resource-item">
+          <div class="resource-number">04</div>
+          <div>
+            <h3 class="resource-title">✍️ Writing</h3>
+            <p class="resource-description">
+              Grammar, sentence structure and academic expression.
+            </p>
+          </div>
+          <span class="resource-status">Coming soon</span>
+        </article>
+
+        <article class="resource-item">
+          <div class="resource-number">05</div>
+          <div>
+            <h3 class="resource-title">🎓 IELTS Preparation</h3>
+            <p class="resource-description">
+              Academic English, exam strategies and guided practice.
+            </p>
+          </div>
+          <span class="resource-status">Coming soon</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="vocabulary-section" id="academic-vocabulary">
+      <div class="section-top">
+        <div>
+          <h2>Academic Vocabulary Bank</h2>
+          <p>Essential words for learning across subjects.</p>
+        </div>
+        <span class="section-index">FEATURED</span>
+      </div>
+
+      <div class="vocabulary-card">
+        <h3>Three words to know</h3>
+
+        <div class="word-list">
+          <div class="word">
+            <strong>Analyze</strong>
+            <p>To examine something carefully to understand it.</p>
+          </div>
+
+          <div class="word">
+            <strong>Compare</strong>
+            <p>To identify similarities and differences.</p>
+          </div>
+
+          <div class="word">
+            <strong>Evaluate</strong>
+            <p>To judge the value, quality or effectiveness of something.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      Faye's EAL Resource Hub · Learn with purpose. Progress with confidence.
+    </div>
+  </footer>
 </body>
 </html>
