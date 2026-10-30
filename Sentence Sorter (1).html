@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sentence Sorter</title>
+<style>
+:root{--teal:#0F766E;--teal-d:#0B5C56;--teal-l:#E3F3F1;--orange:#E08E45;--purple:#7C5CBF;--purple-l:#EEE8FA;--ink:#1F2937;--muted:#5B6572;--bg:#F6FAF9;--card:#fff;--line:#DCEAE7;--ok-bg:#E5F5E9;--ok:#1F7A3D;--bad-bg:#FCEBEA;--bad:#B23B32;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--teal:#2DD4BF;--teal-d:#5EEAD4;--teal-l:#12332F;--orange:#F0A35E;--purple:#B79CF2;--purple-l:#2A2142;--ink:#E5E7EB;--muted:#9CA3AF;--bg:#0F1716;--card:#16201F;--line:#2A3A38;--ok-bg:#12301C;--ok:#7FD99A;--bad-bg:#3A1816;--bad:#F2A19A}}
+:root[data-theme="dark"]{color-scheme:dark;--teal:#2DD4BF;--teal-d:#5EEAD4;--teal-l:#12332F;--orange:#F0A35E;--purple:#B79CF2;--purple-l:#2A2142;--ink:#E5E7EB;--muted:#9CA3AF;--bg:#0F1716;--card:#16201F;--line:#2A3A38;--ok-bg:#12301C;--ok:#7FD99A;--bad-bg:#3A1816;--bad:#F2A19A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.5;display:flex;justify-content:center;padding:1.5rem 1rem}
+.wrap{width:100%;max-width:680px}
+header{text-align:center;margin-bottom:1rem}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--orange);text-transform:uppercase}
+h1{font-size:28px;margin:4px 0;color:var(--teal-d)}
+header p{margin:0;color:var(--muted);font-size:14.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:1.4rem}
+.stats{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+.stats b{color:var(--ink)}
+.bar{height:8px;background:var(--teal-l);border-radius:5px;overflow:hidden;margin-bottom:16px}
+.fill{height:100%;background:var(--teal);transition:width .25s}
+.badge{display:inline-block;background:var(--teal-l);color:var(--teal-d);font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:100px;margin-bottom:12px}
+.badge.p{background:var(--purple-l);color:var(--purple)}
+.text{font-size:23px;font-weight:700;padding:20px 16px;background:var(--bg);border-left:5px solid var(--teal);border-radius:10px;margin-bottom:8px}
+.ask{font-size:14px;color:var(--muted);margin:0 0 14px}
+.opts{display:grid;gap:10px}
+.opts.three{grid-template-columns:repeat(3,1fr)}
+.opt{font-size:15.5px;font-weight:700;padding:13px 10px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;text-align:center}
+.opts:not(.three) .opt{text-align:left;font-weight:600}
+.opt .e{display:block;font-size:24px}
+.opt:hover:not(:disabled){border-color:var(--teal);background:var(--teal-l)}
+.opt.right{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14.5px}
+.fb .v{font-weight:800}.fb.good .v{color:var(--ok)}.fb.bad .v{color:var(--bad)}
+.next,.go,.sec{border:none;font-weight:800;border-radius:11px;cursor:pointer;font-size:15px;padding:11px 20px}
+.next{display:none;float:right;margin-top:12px;background:var(--teal);color:var(--card)}
+.go{display:block;width:100%;background:var(--orange);color:#1F2937;font-size:16px;padding:14px;margin-top:14px}
+.sec{background:var(--card);color:var(--teal-d);border:2px solid var(--teal);margin:6px 6px 0 0}
+.box{background:var(--teal-l);border-radius:12px;padding:11px 14px;margin:10px 0;font-size:14px}
+.box b{color:var(--teal-d)}
+.box.p{background:var(--purple-l)}.box.p b{color:var(--purple)}
+.box.o{background:var(--bad-bg)}.box.o b{color:var(--bad)}
+input[type=text],textarea{width:100%;border:2px solid var(--line);border-radius:11px;padding:11px 13px;font:inherit;background:var(--card);color:var(--ink)}
+input:focus,textarea:focus{outline:none;border-color:var(--teal)}
+textarea{min-height:64px;resize:vertical}
+.task{margin:14px 0}.task h4{margin:0 0 4px;color:var(--teal-d);font-size:15px}
+.ticks{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:5px}
+.ticks span.y{color:var(--ok);font-weight:700}
+.end{text-align:center}.end h2{color:var(--teal-d);margin:4px 0}.big{font-size:54px}
+.grid{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+.stat{background:var(--bg);border-radius:12px;padding:10px 18px}
+.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{font-size:21px;color:var(--teal-d)}
+.miss{text-align:left;font-size:13.5px}.miss div{padding:5px 0;border-bottom:1px solid var(--line)}
+.toast{font-size:13px;color:var(--ok);min-height:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.chip{border:2px solid var(--purple);background:var(--card);color:var(--purple);font-weight:700;font-size:13.5px;padding:5px 12px;border-radius:100px;cursor:pointer}.chip:hover{background:var(--purple-l)}.vid{display:block;text-align:center;text-decoration:none;background:var(--orange);color:#1F2937;font-weight:800;padding:14px;border-radius:12px;margin:10px 0}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9;padding:1rem}.ovb{background:var(--card);border-radius:16px;padding:1.5rem;max-width:420px;text-align:center}.ovb h2{color:var(--bad);margin:0 0 6px}
+.fbk{text-align:left;font-size:13.5px;background:var(--teal-l);border-radius:12px;padding:12px 14px;margin:12px 0}.fbk b{color:var(--teal-d)}.fbk p{margin:6px 0}
+@media(max-width:480px){.opts.three{grid-template-columns:1fr}.text{font-size:20px}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<header><div class="eyebrow">Years 10 &amp; 11 EAL · Grammar</div><h1>Sentence Sorter 🧩🚂✅</h1><p>Find fragments and run-ons. Fix them. Write your own.</p></header>
+<div class="card"><div id="g"></div></div>
+</div>
+<script>
+const SPOT=[
+["I like pizza.","s","It has a subject (I) and a verb (like). The idea is finished."],
+["Because it was late.","f","<b>Because</b> makes the idea unfinished. What happened because it was late?"],
+["It was raining we stayed inside.","r","Two sentences are stuck together with no punctuation or joining word."],
+["The bus was late, so we waited.","s","Two complete ideas joined correctly with a comma + <b>so</b>."],
+["Running in the park.","f","There is no subject and no full verb. Who is running?"],
+["She was tired, she went to bed.","r","A comma is not strong enough. Use a comma + <b>so</b>, or a full stop."],
+["We played football after school.","s","Subject + verb + finished idea."],
+["My best friend at school.","f","There is a subject but no verb. What did your friend do?"],
+["I love music I play guitar every day.","r","Two ideas with no break. Add <b>and</b>, or start a new sentence."],
+["When the bell rang.","f","<b>When</b> starts an unfinished idea. What happened when the bell rang?"],
+["My mum cooks dinner every night.","s","Complete: who (my mum), what (cooks), when (every night)."],
+["The shop was closed we went home.","r","Two complete sentences are joined without punctuation."]
+];
+const FIX=[
+["I was hungry I ate lunch.","I was hungry, so I ate lunch.",["I was hungry, I ate lunch.","I was hungry I ate, lunch."],"Comma + <b>so</b> joins two ideas correctly."],
+["Because the road was flooded.","Because the road was flooded, we stayed home.",["Because the road was flooded we.","The road because was flooded."],"A dependent clause needs a main clause after it."],
+["My sister likes music she plays guitar.","My sister likes music, and she plays guitar.",["My sister likes music, she plays guitar.","My sister likes, music she plays guitar."],"Add comma + <b>and</b>. A comma alone is not enough."],
+["Walking to school.","I am walking to school.",["Walking to school now.","Walking to school, I."],"Add a subject (<b>I</b>) and a helping verb (<b>am</b>)."],
+["It was cold, we wore jackets.","It was cold, so we wore jackets.",["It was cold we wore jackets.","It was cold, we, wore jackets."],"A comma splice needs a joining word: <b>so</b>."],
+["After we ate dinner.","After we ate dinner, we did our homework.",["After we ate dinner we.","We after ate dinner."],"Finish the idea with a main clause."]
+];
+const WT=[
+["Sentence 1: Write a simple sentence about your weekend.",null,3,"Needs: capital letter, end mark, 3+ words"],
+["Sentence 2: Write a sentence with <b>because</b>.",/\bbecause\b/i,5,"Use the word because"],
+["Sentence 3: Write one sentence with <b>and</b>, <b>but</b> or <b>so</b> (use a comma before it).",/,\s*(and|but|so)\b/i,6,"Use , and / , but / , so"]
+];
+const el=document.getElementById("g");
+const VIDEO_URL="https://www.youtube.com/watch?v=R-VRAemIvbI";const VIDEO_TOPIC="the history of Halloween";
+const SEQ=["First","Next","Then","After that","Finally"];
+const SUB=/^(because|although|though|when|whenever|while|after|before|if|unless|since|which|who|as)\b/i;
+let tabs=0,guard=false,last=0,skipped=false,notes="",ended="";
+function ov(h,b){let o=document.getElementById("ov");if(o)o.remove();o=document.createElement("div");o.id="ov";o.className="ov";
+o.innerHTML=`<div class="ovb"><h2>${h}</h2><p>${b}</p><button class="go" id="ovk">Back to writing</button></div>`;document.body.appendChild(o);document.getElementById("ovk").onclick=()=>o.remove()}
+function lost(){if(!guard||Date.now()-last<1500)return;last=Date.now();tabs++;
+if(tabs===1)ov("⚠️ First warning","You left this tab. Stay on this page while you write. If you leave again, you will get a final warning.");
+else if(tabs===2)ov("🛑 Final warning","You left this tab again. If it happens one more time, your paragraph will be submitted as it is.");
+else{guard=false;const t=document.getElementById("pp");if(t)P=t.value.trim();ended="Paragraph was submitted automatically after repeated tab changes.";const o=document.getElementById("ov");if(o)o.remove();end()}}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)lost()});
+function watch(){guard=false;
+el.innerHTML=`<div class="bar"><div class="fill" style="width:100%"></div></div><div class="badge p">Round 4 · Watch and write 🎬</div>
+<p style="font-size:14px;margin:0 0 4px"><b>Step 1:</b> Watch <i>Halloween History | National Geographic</i>. Take notes in order: first, next, then...<br><small>Tip: turn on subtitles (CC) and slow the speed if you need to.</small></p>
+<a class="vid" href="${VIDEO_URL}" target="_blank" rel="noopener">▶ Watch the video (opens YouTube)</a>
+<p style="font-size:14px;margin:0 0 4px"><b>Step 2:</b> Write your notes. You can read them while you write.</p>
+<textarea id="nt" style="min-height:110px" placeholder="My notes..."></textarea>
+<div class="box o"><b>Before you write:</b> the paragraph is a test. Open and watch the video <b>now</b>, not while you write. On the writing page, if you leave the tab you get a <b>first warning</b>, then a <b>final warning</b>. After that, your paragraph is submitted.</div>
+<button class="go" id="rd">✅ I’m ready to write the paragraph</button>
+<button class="sec" id="sk" style="width:100%;margin-top:10px">Skip for now (I’m not ready yet)</button>`;
+document.getElementById("nt").value=notes;
+document.getElementById("rd").onclick=()=>{notes=document.getElementById("nt").value.trim();para()};
+document.getElementById("sk").onclick=()=>{notes=document.getElementById("nt").value.trim();skipped=true;P="";end()}}
+function para(){tabs=0;guard=true;
+el.innerHTML=`<div class="badge p">Paragraph test ✍️ · Stay on this page</div>
+<p style="font-size:14px;margin:0 0 4px">Write a paragraph: <b>${VIDEO_TOPIC}</b>. Use <b>sequence words</b> (tap to add):</p>
+<div class="chips">${SEQ.map(x=>`<button class="chip">${x}</button>`).join("")}</div>
+${notes?`<div class="box"><b>My notes:</b><br>${notes.replace(/</g,"&lt;").replace(/\n/g,"<br>")}</div>`:""}
+<textarea id="pp" style="min-height:170px" placeholder="First, ..."></textarea><div class="ticks" id="pt"></div>
+<div class="box">💡 Put a comma after sequence words: <i>First, people lit bonfires.</i> Write 5 to 8 complete sentences in the order things happened.</div>
+<button class="go" id="f2">Finish ✔</button>`;
+const ta=document.getElementById("pp");
+const ck=()=>{const v=ta.value.trim(),n=v?v.split(/\s+/).length:0;
+document.getElementById("pt").innerHTML=SEQ.map(x=>{const y=new RegExp("\\b"+x+"\\b","i").test(v);return `<span class="${y?"y":""}">${y?"✔":"○"} ${x}</span>`}).join("")+`<span class="${n>=50?"y":""}">${n>=50?"✔":"○"} 50+ words (${n})</span><span class="${/[.!?]$/.test(v)?"y":""}">${/[.!?]$/.test(v)?"✔":"○"} End mark</span>`};
+ta.oninput=ck;ck();
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ta.value+=(ta.value&&!/\s$/.test(ta.value)?" ":"")+c.textContent+", ";ta.focus();ck()});
+document.getElementById("f2").onclick=()=>{guard=false;P=ta.value.trim();end()}}
+const WL=["","Entering","Emerging","Developing","Expanding","Bridging"];
+const WD=["","can supply words and short answers with support","can write lists, notes and simple texts with models and organizers","can compose short narrative and expository pieces and check them against criteria","can compose text for different purposes, justify ideas and revise using feedback","can produce extended, detailed pieces and explain processes with detail"];
+const WN=["","Write full sentences about the video, not single words.","Join ideas with and, but, so, because and use 3+ sequence words.","Add more detail and use a wider range of connectors (although, when, which).","Vary your sentence openings and add precise topic vocabulary.","Keep refining style and precision."];
+function fb(t){const sents=t.split(/(?<=[.!?])\s+/).filter(x=>x.trim()),words=t.toLowerCase().match(/[a-z']+/g)||[],n=words.length,sn=sents.length;
+const seq=SEQ.filter(x=>new RegExp("\\b"+x+"\\b","i").test(t)).length;
+const conn=(t.match(/\b(because|but|so|and|although|however|when|while|which|who|if|since|also)\b/gi)||[]).length;
+const uniq=new Set(words).size/Math.max(n,1),er=[];
+sents.forEach(x=>{x=x.trim();const w=x.split(/\s+/).length,q=x.slice(0,45)+(x.length>45?"…":"");
+if(!/^[A-Z]/.test(x))er.push("No capital letter: “"+q+"”");else if(!/[.!?]$/.test(x))er.push("No end mark: “"+q+"”");
+if(SUB.test(x)&&!/,/.test(x)&&w<9)er.push("Possible fragment: “"+q+"”");
+const m=x.match(/^([^,]+),\s*(he|she|it|they|we|i)\s/i);if(m&&!SUB.test(x)&&m[1].trim().split(/\s+/).length>=4)er.push("Possible comma splice: “"+q+"”");
+const c=x.match(/^(first|next|finally|after that)\b(?!,)/i);if(c)er.push("Add a comma after “"+c[1]+"”");
+if(w>30)er.push("Very long sentence (possible run-on): “"+q+"”")});
+let L=1;if(n>=15&&sn>=2)L=2;if(n>=40&&sn>=4)L=3;if(n>=75&&sn>=6&&conn>=5&&seq>=3&&er.length<=3)L=4;if(n>=110&&sn>=8&&conn>=8&&seq>=4&&er.length<=1&&uniq>.55)L=5;
+const rows=[
+["WIDA Can Do (Grades 9–12) · Writing","Level "+L+" "+WL[L]+" (indicative): "+WD[L]+". Next step: "+WN[L]],
+["Task response",n+" words, "+sn+" sentences. "+(n>=80?"Good length for the task.":"Aim for 80+ words and 5 to 8 sentences about the video.")],
+["Coherence and cohesion",seq+"/5 sequence words and "+conn+" linking words used. "+(seq>=4?"The order of ideas is clear.":"Use more of First, Next, Then, After that, Finally to show the order.")],
+["Lexical resource","Word variety "+Math.round(uniq*100)+"%. "+(uniq>.6?"Good range of words.":"Try to use more topic words from the video instead of repeating the same words.")],
+["Grammatical range and accuracy",er.length?"Check "+er.length+" thing(s) before sending: "+er.slice(0,3).join("; ")+".":"No obvious sentence errors found. Try adding a sentence with although, when or which."]];
+return{L,rows}}
+async function mkpdf(txtFb,pct){const J=window.jspdf&&window.jspdf.jsPDF;const dl=window.claude&&await claude.use("downloads");
+const ts=document.getElementById("ts");if(!J||!dl){ts.textContent="PDF saving is not available here. Please use “Copy my work”.";return}
+const d=new J({unit:"mm",format:"a4"});let y=18;
+const cl=x=>String(x).replace(/[^\x20-\x7E\u00A0-\u00FF\u2018\u2019\u201C\u201D\u2013\u2014\n]/g,"");
+const H=(x,z)=>{if(y>270){d.addPage();y=18}d.setFont("helvetica","bold");d.setFontSize(z||13);d.text(cl(x),15,y);y+=7};
+const T=(x,z)=>{d.setFont("helvetica","normal");d.setFontSize(z||11);d.splitTextToSize(cl(x),180).forEach(l=>{if(y>280){d.addPage();y=18}d.text(l,15,y);y+=5.5});y+=2};
+H("Sentence Sorter - Student Result",16);T("Name: "+name+"     Date: "+new Date().toLocaleDateString());
+T("Quiz: "+ok+"/"+Q.length+" ("+pct+"%)     Total score: "+(document.getElementById("tot").textContent));
+H("Round 3 - My sentences");W.forEach((w,k)=>T((k+1)+". "+(w||"(blank)")));
+H("Round 4 - Paragraph: "+VIDEO_TOPIC);T(skipped?"SKIPPED - student chose to do this later.":(P||"(blank)"));
+if(notes){H("My notes",11);T(notes)}
+H("Test integrity",11);T("Tab changes during paragraph: "+tabs+(ended?". "+ended:""));
+H("Teacher feedback (automatic, indicative)");T(txtFb);
+T("This feedback is generated by the game and is a guide only. Your teacher will confirm the level using WIDA and IELTS-style criteria.",9);
+try{await dl.save({filename:name.replace(/[^\w]+/g,"_")+"_sentence_sorter.pdf",data:d.output("blob")});ts.textContent="PDF saved. Send it to your teacher."}
+catch(err){ts.textContent=err&&err.code==="declined"?"Save cancelled.":"PDF could not be saved. Please use “Copy my work”."}}
+const sh=a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
+let Q,i,score,streak,ok,miss,name="",W=[],P="";
+function intro(){skipped=false;tabs=0;ended="";P="";notes="";guard=false;el.innerHTML=`<div class="box"><b>✅ Sentence</b> = subject + verb + a finished idea.<br><i>I like pizza.</i></div>
+<div class="box p"><b>🧩 Fragment</b> = a piece of a sentence. Something is missing.<br><i>Because it was late.</i></div>
+<div class="box o"><b>🚂 Run-on</b> = two sentences stuck together.<br><i>It was raining we stayed inside.</i></div>
+<p style="font-size:14px;margin:12px 0 4px">4 rounds: <b>1 Spot it</b> (12) · <b>2 Fix it</b> (6) · <b>3 Write it</b> (3 sentences) · <b>4 Watch and write</b> (paragraph)</p>
+<input type="text" id="nm" placeholder="Your name"><button class="go" id="s">Let’s play!</button>`;
+document.getElementById("s").onclick=()=>{name=document.getElementById("nm").value.trim()||"Student";
+Q=sh(SPOT).map(x=>({k:"spot",t:x[0],a:x[1],w:x[2]})).concat(sh(FIX).map(x=>({k:"fix",t:x[0],o:sh([x[1]].concat(x[2])),c:x[1],w:x[3]})));
+i=0;score=0;streak=0;ok=0;miss=[];show()}}
+function show(){if(i>=Q.length)return write();const q=Q[i],sp=q.k==="spot";
+let o=sp?`<div class="opts three"><button class="opt" data-v="s"><span class="e">✅</span>Sentence</button><button class="opt" data-v="f"><span class="e">🧩</span>Fragment</button><button class="opt" data-v="r"><span class="e">🚂</span>Run-on</button></div>`
+:`<div class="opts">${q.o.map(x=>`<button class="opt" data-v="${x.replace(/"/g,"&quot;")}">${x}</button>`).join("")}</div>`;
+el.innerHTML=`<div class="stats"><span>Question ${i+1} of ${Q.length}</span><span>🔥 <b>${streak}</b> · ⭐ <b>${score}</b></span></div>
+<div class="bar"><div class="fill" style="width:${i/Q.length*100}%"></div></div>
+<div class="badge ${sp?"":"p"}">${sp?"Round 1 · Spot it":"Round 2 · Fix it"}</div>
+<div class="text">${q.t}</div><p class="ask">${sp?"What is it?":"Choose the best fix."}</p>${o}
+<p class="fb" id="fb"></p><button class="next" id="n">Next →</button>`;
+document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(b));
+document.getElementById("n").onclick=()=>{i++;show()}}
+function pick(b){const q=Q[i],f=document.getElementById("fb"),bs=[...document.querySelectorAll(".opt")],right=q.k==="spot"?q.a:q.c;
+bs.forEach(x=>x.disabled=true);
+if(b.dataset.v===right){b.classList.add("right");streak++;score+=10+(streak>=3?5:0);ok++;f.className="fb good";f.innerHTML=`<span class="v">${streak>=3?"🔥 On fire!":"🎉 Correct!"}</span> ${q.w}`}
+else{b.classList.add("wrong");bs.find(x=>x.dataset.v===right).classList.add("right");streak=0;miss.push(q);f.className="fb bad";f.innerHTML=`<span class="v">Not quite.</span> ${q.w}`}
+document.getElementById("n").style.display="inline-block"}
+function write(){el.innerHTML=`<div class="bar"><div class="fill" style="width:100%"></div></div><div class="badge p">Round 3 · Write it ✍️</div>
+<p style="font-size:14px;margin:0">Write about <b>your life</b>. Watch the ticks turn green!</p>
+${WT.map((w,k)=>`<div class="task"><h4>${w[0]}</h4><textarea id="w${k}" placeholder="Type here..."></textarea><div class="ticks" id="t${k}"></div></div>`).join("")}
+<button class="go" id="f">Next: Watch and write →</button>`;
+WT.forEach((w,k)=>{const ta=document.getElementById("w"+k);ta.oninput=()=>chk(k);chk(k)});
+document.getElementById("f").onclick=()=>{W=WT.map((_,k)=>document.getElementById("w"+k).value.trim());watch()}}
+function chk(k){const w=WT[k],v=document.getElementById("w"+k).value.trim(),n=v?v.split(/\s+/).length:0;
+const c=[["Capital letter",/^[A-Z]/.test(v)],["End mark . ! ?",/[.!?]$/.test(v)],[w[2]+"+ words",n>=w[2]]];
+if(w[1])c.push([w[3].replace("Use ",""),w[1].test(v)]);
+document.getElementById("t"+k).innerHTML=c.map(x=>`<span class="${x[1]?"y":""}">${x[1]?"✔":"○"} ${x[0]}</span>`).join("")}
+function end(){const w=W;
+let b=0;WT.forEach((x,k)=>{const v=w[k],n=v?v.split(/\s+/).length:0;if(/^[A-Z]/.test(v)&&/[.!?]$/.test(v)&&n>=x[2]&&(!x[1]||x[1].test(v)))b++});
+const pq=SEQ.filter(s=>new RegExp("\\b"+s+"\\b","i").test(P)).length,tot=score+b*20+(pq>=3?20:0),p=Math.round(ok/Q.length*100),t=p>=90?"Sentence Superstar":p>=70?"Great Fixer":p>=50?"Rising Writer":"Keep Going!";
+const F=skipped?null:fb(P),fbTxt=F?F.rows.map(r=>r[0]+": "+r[1]).join("\n"):"Paragraph skipped. Feedback will be given when the paragraph is completed.",fbHtml=`<div class="fbk"><b>Teacher feedback</b> <small>(automatic and indicative; your teacher will confirm)</small>${F?F.rows.map(r=>`<p><b>${r[0]}:</b> ${r[1]}</p>`).join(""):"<p>You skipped the paragraph. Come back when you are ready.</p>"}${ended?`<p><b>Note:</b> ${ended}</p>`:""}${tabs?`<p><b>Tab changes:</b> ${tabs}</p>`:""}</div>`;
+const txt=`${name}\nQuiz: ${ok}/${Q.length}\n1. ${w[0]}\n2. ${w[1]}\n3. ${w[2]}\n\nParagraph:\n${skipped?"(skipped)":P}\n\n${fbTxt}`;
+el.innerHTML=`<div class="end"><div class="big">${p>=70?"🏆":"🌟"}</div><h2>${t}</h2><div class="grid"><div class="stat"><small>Score</small><strong id="tot">${tot}</strong></div><div class="stat"><small>Quiz</small><strong>${ok}/${Q.length}</strong></div><div class="stat"><small>Writing checks</small><strong>${b}/3</strong></div><div class="stat"><small>Sequence words</small><strong>${pq}/5</strong></div></div>
+${miss.length?`<div class="miss"><b>Review these:</b>${miss.map(m=>`<div>“${m.t}” → ${m.k==="spot"?{s:"Sentence",f:"Fragment",r:"Run-on"}[m.a]:m.c}</div>`).join("")}</div>`:""}
+${fbHtml}<button class="sec" id="pdf">📄 Save PDF to send my teacher</button><button class="sec" id="cp">Copy my work</button><button class="sec" id="ag">Play again</button><p class="toast" id="ts"></p></div>`;
+document.getElementById("cp").onclick=()=>{try{navigator.clipboard.writeText(txt).then(()=>ts.textContent="Copied! Paste it to your teacher.")}catch(e){ts.textContent="Copy failed. Please screenshot instead."}};
+document.getElementById("pdf").onclick=()=>mkpdf(fbTxt,p);
+document.getElementById("ag").onclick=intro}
+intro();
+</script>
+</body>
+</html>
