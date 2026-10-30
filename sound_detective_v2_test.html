@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sound Detective: Listen, Choose, Record</title>
+<style>
+:root{--teal:#0F766E;--tealD:#0B5C56;--tealL:#E3F3F1;--or:#E08E45;--ink:#1F2937;--mut:#5B6572;--bg:#F6FAF9;--card:#fff;--bd:#DCEAE7;--okb:#E5F5E9;--okt:#1F7A3D;--badb:#FCEBEA;--badt:#B23B32;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--teal:#2DB5A8;--tealD:#7FD6CC;--tealL:#173936;--ink:#E6EDF0;--mut:#9AA7AD;--bg:#0F1719;--card:#162226;--bd:#2A3B40;--okb:#173A25;--okt:#7FD69A;--badb:#40201E;--badt:#F0968E}}
+:root[data-theme="dark"]{--teal:#2DB5A8;--tealD:#7FD6CC;--tealL:#173936;--ink:#E6EDF0;--mut:#9AA7AD;--bg:#0F1719;--card:#162226;--bd:#2A3B40;--okb:#173A25;--okt:#7FD69A;--badb:#40201E;--badt:#F0968E}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,Arial,"Noto Sans Thai","Noto Sans SC",sans-serif;line-height:1.5;padding:1.5rem 1rem}
+.wrap{max-width:700px;margin:0 auto}
+h1{font-size:25px;color:var(--tealD);margin:0 0 4px;text-align:center}
+.sub{text-align:center;color:var(--mut);margin:0 0 18px;font-size:14.5px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:1.4rem}
+.badge{display:inline-block;background:var(--tealL);color:var(--tealD);font-weight:700;font-size:12.5px;padding:5px 12px;border-radius:99px}
+.bar{height:8px;background:var(--tealL);border-radius:5px;margin:10px 0 16px;overflow:hidden}.bar i{display:block;height:100%;background:var(--teal)}
+.word{font-size:38px;font-weight:800;text-align:center;margin:8px 0 2px;letter-spacing:.5px}
+.tr{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.tr span{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:5px 12px;font-size:16px}
+.tr small{color:var(--mut);font-size:11px;margin-right:6px}
+.q{font-weight:700;margin:6px 0 10px}
+.opt{display:flex;align-items:center;gap:10px;border:1.5px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:9px}
+.opt.ok{background:var(--okb);border-color:var(--okt)}.opt.bad{background:var(--badb);border-color:var(--badt)}
+.opt .l{font-weight:800;width:24px;color:var(--tealD)}
+button{font:inherit;cursor:pointer}
+.play{background:var(--teal);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:700}
+.pick{margin-left:auto;background:var(--card);color:var(--tealD);border:1.5px solid var(--teal);border-radius:10px;padding:8px 12px;font-weight:700}
+.pick:disabled,.play:disabled{opacity:.5;cursor:default}
+.fb{margin:10px 0;font-weight:600}.fb.g{color:var(--okt)}.fb.r{color:var(--badt)}
+.rec{background:var(--tealL);border-radius:14px;padding:14px;margin-top:12px}
+.rec h3{margin:0 0 4px;font-size:15px;color:var(--tealD)}.rec p{margin:0 0 10px;font-size:13.5px;color:var(--mut)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.recbtn{background:#C0392B;color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:700}
+.sec{background:var(--card);color:var(--tealD);border:1.5px solid var(--teal);border-radius:10px;padding:8px 14px;font-weight:700}
+.next{display:block;margin:16px 0 0 auto;background:var(--or);color:#fff;border:0;border-radius:11px;padding:11px 22px;font-weight:800}
+.start{width:100%;background:var(--or);color:#fff;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:800;margin-top:14px}
+input[type=text]{width:100%;padding:11px 13px;border:1.5px solid var(--bd);border-radius:11px;font:inherit;background:var(--card);color:var(--ink)}
+.grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.stat{background:var(--bg);border-radius:12px;padding:12px 18px;text-align:center}.stat b{display:block;font-size:22px;color:var(--tealD)}.stat span{font-size:12px;color:var(--mut)}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--bd)}th{color:var(--tealD);font-size:12px;text-transform:uppercase}
+.note{background:var(--tealL);border-radius:12px;padding:12px 14px;font-size:13.5px;margin:12px 0}
+audio{height:34px;max-width:230px}
+.opt{flex-wrap:wrap}.opt.now{border-color:var(--teal);box-shadow:0 0 0 2px var(--tealL)}
+.opt .sp{font-size:12.5px;color:var(--mut);flex-basis:100%;padding-left:34px}
+.vbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:12px;font-size:13px;color:var(--mut)}
+.vbar select{font:inherit;padding:6px 8px;border:1.5px solid var(--bd);border-radius:9px;background:var(--card);color:var(--ink);max-width:210px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:1rem;z-index:50}.modal[hidden]{display:none}
+.mbox{background:var(--card);color:var(--ink);border-radius:16px;padding:1.4rem;max-width:380px;text-align:center;border:1px solid var(--bd)}.mbox h3{margin:0 0 8px;color:var(--tealD)}.mbox p{margin:0 0 14px;font-size:14.5px}
+.rsrow{text-align:center;margin-top:12px}
+#sheet table{font-size:13.5px}#sheet a{color:var(--tealD)}
+@media print{body{background:#fff!important;color:#000!important;padding:0}.vbar,.rsrow,.noprint,.modal,h1,.sub{display:none!important}.card{border:0!important;padding:0!important;background:#fff!important}#sheet,#sheet *{color:#000!important;background:transparent!important}#sheet table{font-size:11pt}#sheet tr{page-break-inside:avoid}#sheet th,#sheet td{border-bottom:1px solid #999}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🎧 Sound Detective</h1>
+<p class="sub">Listen to three pronunciations. Which one is correct? Then record yourself.</p>
+<div class="vbar" id="vbar"><label>Voice <select id="vs"></select></label><label>Speed <select id="rt"><option value=".55">Slow</option><option value=".75" selected>Normal</option><option value="1">Fast</option></select></label><button class="sec" id="vt">🔊 Test voice</button></div>
+<div class="card" id="app"></div>
+<div class="rsrow"><button class="sec" id="reset">↺ Reset activity</button></div>
+<div class="modal" id="modal" hidden><div class="mbox" role="alertdialog" aria-modal="true" aria-labelledby="mt" aria-describedby="mp"><h3 id="mt"></h3><p id="mp"></p><p id="mn" style="font-size:12.5px;color:var(--mut)"></p><div class="row" id="mb" style="justify-content:center"></div></div></div>
+</div>
+<script>
+// category, word, Thai, Mandarin, wrong respelling 1, wrong respelling 2 (read aloud by the voice to sound "incorrect")
+const ALL=[
+["cc","success","สำเร็จ","成功","sucksess","sookess"],
+["cc","accident","อุบัติเหตุ","事故","ackeedent","atchident"],
+["cc","account","บัญชี","账户","akkount","ahchount"],
+["cc","occur","เกิดขึ้น","发生","okker","ohchur"],
+["cc","soccer","ฟุตบอล","足球","sosser","sochur"],
+["sc","scene","ฉาก","场景","skeen","shayn"],
+["sc","science","วิทยาศาสตร์","科学","skyence","seeence"],
+["sc","scissors","กรรไกร","剪刀","skissors","shizzers"],
+["sc","scientist","นักวิทยาศาสตร์","科学家","skyentist","sheentist"],
+["sc","scenery","ทิวทัศน์","风景","skeenery","shennery"],
+["soft c = s","city","เมือง","城市","kitty","chitty"],
+["soft c = s","cycle","จักรยาน","自行车","kickle","chickle"],
+["soft c = s","peace","สันติภาพ","和平","peek","peech"],
+["soft c = s","face","ใบหน้า","脸","fack","fahchay"],
+["soft c = s","centre","ศูนย์กลาง","中心","kenter","chenter"],
+["a_e","cake","เค้ก","蛋糕","kack","kahkay"],
+["a_e","name","ชื่อ","名字","nahm","nammy"],
+["a_e","late","สาย","迟到","lat","lahtay"],
+["a_e","plane","เครื่องบิน","飞机","plan","plahnay"],
+["a_e","shape","รูปร่าง","形状","shap","shahpay"],
+["a","banana","กล้วย","香蕉","baynayna","bahnana"],
+["a","family","ครอบครัว","家庭","fahmilee","fameily"],
+["a","about","เกี่ยวกับ","关于","aybout","abbot"],
+["a","animal","สัตว์","动物","aynimal","ahnimul"],
+["a","again","อีกครั้ง","再次","aygayn","ahgine"],
+["u","put","วาง","放","putt","pyoot"],
+["u","study","เรียน","学习","stoody","styoody"],
+["u","music","ดนตรี","音乐","mussick","moosick"],
+["u","bus","รถบัส","公交车","boos","bews"],
+["u","full","เต็ม","满","fool","fuhl"],
+["3–4 vowels","beautiful","สวย","美丽","beeowtiful","bowtiful"],
+["3–4 vowels","queue","คิว","排队","kwooee","kwayoo"],
+["3–4 vowels","quiet","เงียบ","安静","kwit","kweet"],
+["3–4 vowels","audience","ผู้ชม","观众","owdeeens","odeeanse"],
+["3–4 vowels","queen","ราชินี","女王","kwen","kwayn"],
+["3–4 consonants","strength","ความแข็งแรง","力量","strenk","strengs"],
+["3–4 consonants","months","เดือน","月份","monthiss","muns"],
+["3–4 consonants","friends","เพื่อน","朋友","fryends","freens"],
+["3–4 consonants","strange","แปลก","奇怪","strang","strahnj"],
+["3–4 consonants","splash","สาด","溅","spuhlash","splaysh"]
+];
+let W=ALL;
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const app=document.getElementById("app");
+let i=0,name="",res=[],recs={},opts=[],done=false,mr=null,chunks=[],stream=null;
+const TTS="speechSynthesis" in window;
+let vSel=null,rate=.75;
+const BAD=/compact|espeak|albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|kathy|ralph/i;
+function vscore(v){let s=0;if(/en[-_]GB/i.test(v.lang))s+=3;else if(/en[-_]US/i.test(v.lang))s+=2;else if(/en[-_](AU|IE|ZA|NZ)/i.test(v.lang))s+=1;if(/natural|neural|online/i.test(v.name))s+=6;if(/google uk english female|google us english|samantha|daniel|serena|karen|libby|sonia|aria|jenny|ryan/i.test(v.name))s+=4;return s}
+function loadVoices(){if(!TTS)return;const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)&&!BAD.test(v.name)).sort((a,b)=>vscore(b)-vscore(a));if(!vs.length)return;const sel=document.getElementById("vs"),cur=vSel&&vSel.name;sel.innerHTML=vs.map(v=>`<option value="${v.name}">${v.name} (${v.lang})${vs[0]===v?" ★ best":""}</option>`).join("");vSel=vs.find(v=>v.name===cur)||vs[0];sel.value=vSel.name;sel.onchange=()=>{vSel=vs.find(v=>v.name===sel.value)}}
+function speak(t,done){if(!TTS){if(done)done();return}speechSynthesis.cancel();setTimeout(()=>{const u=new SpeechSynthesisUtterance(t);u.lang=vSel?vSel.lang:"en-GB";if(vSel)u.voice=vSel;u.rate=rate;if(done){u.onend=done;u.onerror=done}speechSynthesis.speak(u)},80)}
+function playAll(){let k=0;const nx=()=>{document.querySelectorAll(".opt").forEach((e,x)=>e.classList.toggle("now",x===k-1&&k<=3));if(k>=3){setTimeout(()=>document.querySelectorAll(".opt").forEach(e=>e.classList.remove("now")),900);return}const j=k++;document.querySelectorAll(".opt").forEach((e,x)=>e.classList.toggle("now",x===j));speak(opts[j].t,()=>setTimeout(nx,600))};nx()}
+function intro(){active=false;
+ app.innerHTML=`<p>You will see <b>${W.length} words</b> from 8 sound groups. For each word:</p>
+ <div class="note"><b>1.</b> Press ▶ A, B and C to hear three pronunciations (only one is correct).<br><b>2.</b> Choose the correct one.<br><b>3.</b> Record yourself reading the word and listen back.</div>
+ <div class="note">⚠️ Please stay on this page. If you leave it once, you will get a warning. If you leave a second time, the activity restarts and your answers are cleared. (This check can’t catch everything, and some interruptions may be counted by mistake.)</div>
+ <div class="note">Not ready for a word? Press <b>Skip for now</b>. Skipped words come back at the end. If you still skip a word, it is shown as unanswered on your Final Review.</div>
+ <div class="note">Groups: cc · sc · soft c (s sound) · a_e · a · u · 3–4 vowels together · 3–4 consonants together.<br>Thai and Chinese meanings are shown for each word.</div>
+ ${TTS?"":'<div class="note">Your browser can’t play the audio voice. Please open this page in Chrome, Edge or Safari.</div>'}
+ <label for="n"><b>Your name</b></label><input type="text" id="n" placeholder="e.g. Amina K.">
+ <button class="start" id="go">Start listening</button>`;
+ document.getElementById("go").onclick=()=>{name=document.getElementById("n").value.trim()||"Student";W=ALL;i=0;res=[];recs={};log={};sw=0;away=false;active=true;begin()};
+}
+let queue=[],qp=0;
+function begin(){Object.values(log).forEach(l=>l.skipped=false);queue=W.map((_,k)=>k);qp=0;q()}
+function q(){
+ if(qp>=queue.length)return summary();i=queue[qp];
+ const [c,w,th,zh,x,y]=W[i];done=false;
+ opts=sh([{t:w,ok:1},{t:x,ok:0},{t:y,ok:0}]);
+ app.innerHTML=`<div class="row" style="justify-content:space-between"><span><span class="badge">${c}</span> ${log[w]&&log[w].skipped?'<span class="badge">↩ Skipped earlier</span>':""}</span><span style="font-size:13px;color:var(--mut)">Word ${i+1} of ${W.length}</span></div>
+ <div class="bar"><i style="width:${W.filter((x,k)=>res[k]!==undefined).length/W.length*100}%"></i></div>
+ <div class="word">${w}</div>
+ <div class="tr"><span><small>ไทย</small>${th}</span><span><small>中文</small>${zh}</span></div>
+ <p class="q">Which audio says “${w}” correctly?</p>
+ ${opts.map((o,k)=>`<div class="opt" id="o${k}"><span class="l">${"ABC"[k]}</span><button class="play" data-k="${k}">▶ Listen</button><button class="pick" data-k="${k}">This one</button></div>`).join("")}
+ <button class="sec" id="all" style="width:100%">▶ Play A, B, C in order</button>
+ <button class="sec" id="skip" style="width:100%;margin-top:10px">${log[w]&&log[w].skipped?"Leave unanswered and move on":"⏭ Skip for now (come back later)"}</button>
+ <div id="after"></div>`;
+ document.getElementById("skip").onclick=()=>{if(TTS)speechSynthesis.cancel();const was=log[w]&&log[w].skipped;log[w]=Object.assign(log[w]||{},{skipped:true});if(!was)queue.push(i);qp++;q()};
+ document.getElementById("all").onclick=playAll;
+ app.querySelectorAll(".play").forEach(b=>b.onclick=()=>speak(opts[b.dataset.k].t));
+ app.querySelectorAll(".pick").forEach(b=>b.onclick=()=>pick(+b.dataset.k));
+}
+function pick(k){
+ if(done)return;done=true;const ok=opts[k].ok===1;res[i]=ok;
+ if(TTS)speechSynthesis.cancel();
+ opts.forEach((o,j)=>{const e=document.getElementById("o"+j);e.classList.remove("now");if(o.ok)e.classList.add("ok");else if(j===k)e.classList.add("bad");e.insertAdjacentHTML("beforeend",`<span class="sp">${o.ok?"✔ Correct pronunciation: “"+o.t+"”":"✘ Incorrect: sounded like “"+o.t+"”"}</span>`)});
+ app.querySelectorAll(".pick").forEach(b=>b.disabled=true);document.getElementById("skip").style.display="none";
+ const w=W[i][1];log[w]=Object.assign(log[w]||{},{answered:true,sel:"ABC"[k],selText:opts[k].t});
+ document.getElementById("after").innerHTML=`<p class="fb ${ok?"g":"r"}">${ok?"Correct! 🎉":"Not quite. The correct one is "+"ABC"[opts.findIndex(o=>o.ok)]+"."}</p>
+ <div class="rec"><h3>🎤 Now you say it: “${w}”</h3><p>Press record, say the word, then press stop. Listen back and compare.</p>
+ <div class="row"><button class="recbtn" id="rb">● Record</button><button class="sec" id="hear">▶ Hear correct word</button><span id="pl"></span></div><p id="rs" style="margin:8px 0 0"></p></div>
+ <button class="next" id="nx">${qp===queue.length-1?"See my results":"Next word →"}</button>`;
+ document.getElementById("hear").onclick=()=>speak(w);
+ document.getElementById("nx").onclick=()=>{qp++;q()};
+ document.getElementById("rb").onclick=toggleRec;
+}
+async function toggleRec(){
+ const b=document.getElementById("rb"),s=document.getElementById("rs");
+ if(mr&&mr.state==="recording"){mr.stop();return}
+ try{
+  micAsk=true;try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}finally{setTimeout(()=>{micAsk=false},1000)}
+  mr=new MediaRecorder(stream);chunks=[];const idx=i,lw=W[i][1];
+  mr.ondataavailable=e=>chunks.push(e.data);
+  mr.onstop=()=>{const url=URL.createObjectURL(new Blob(chunks,{type:mr.mimeType||"audio/webm"}));recs[idx]=url;log[lw]=Object.assign(log[lw]||{},{url:url,ext:/mp4/.test(mr.mimeType||"")?"m4a":"webm"});stream.getTracks().forEach(t=>t.stop());
+   if(i!==idx)return;b.textContent="● Record again";document.getElementById("pl").innerHTML=`<audio controls src="${url}"></audio>`;s.textContent="Saved. Listen to yourself, then try again if you want."};
+  mr.start();b.textContent="■ Stop";s.textContent="Recording…";
+ }catch(e){s.textContent="Microphone not available. Please allow microphone access in your browser."}
+}
+function summary(){
+ active=false;const sc=res.filter(Boolean).length,pct=Math.round(sc/W.length*100);
+ const cats=[...new Set(W.map(w=>w[0]))];
+ const rows=cats.map(c=>{const ix=W.map((w,k)=>w[0]===c?k:-1).filter(k=>k>=0);const g=ix.filter(k=>res[k]).length;return`<tr><td>${c}</td><td>${g} / ${ix.length}</td></tr>`}).join("");
+ const miss=W.map((w,k)=>res[k]?"":`<tr><td>${w[1]}</td><td>${w[2]} · ${w[3]}</td><td><button class="sec" data-w="${w[1]}">▶</button></td></tr>`).join("");
+ const rl=Object.keys(recs).map(k=>`<tr><td>${W[k][1]}</td><td><audio controls src="${recs[k]}"></audio></td></tr>`).join("");
+ app.innerHTML=`<div style="text-align:center"><h2 style="margin:0;color:var(--tealD)">Well done, ${name.replace(/</g,"&lt;")}!</h2></div>
+ <div class="grid"><div class="stat"><b>${sc}/${W.length}</b><span>Correct</span></div><div class="stat"><b>${pct}%</b><span>Accuracy</span></div><div class="stat"><b>${Object.keys(recs).length}</b><span>Recordings</span></div><div class="stat"><b style="${sw?'color:var(--badt)':''}">${sw}</b><span>Tab switches</span></div></div>
+ <h3>Score by sound</h3><div class="tw"><table><tr><th>Sound group</th><th>Score</th></tr>${rows}</table></div>
+ <h3>Words to practise</h3>${miss?`<div class="tw"><table><tr><th>Word</th><th>ไทย · 中文</th><th>Hear</th></tr>${miss}</table></div>`:"<p>None. Perfect score! 🏆</p>"}
+ <h3>My recordings</h3>${rl?`<div class="tw"><table>${rl}</table></div>`:"<p>No recordings yet.</p>"}
+ <div class="note">Next, continue to the Final Review to save your responses as a PDF. Recordings stay in this browser tab only.</div>
+ <button class="start" id="rv">Continue to Final Review →</button>
+ ${miss?'<button class="sec" style="width:100%;margin-top:10px" id="retry">Practise my missed words</button>':""}
+ <button class="sec" id="again" style="width:100%;margin-top:10px">Play the full activity again</button>`;
+ const rb=document.getElementById("retry");if(rb)rb.onclick=()=>{active=true;W=W.filter((w,k)=>!res[k]);i=0;res=[];recs={};begin()};
+ app.querySelectorAll("[data-w]").forEach(b=>b.onclick=()=>speak(b.dataset.w));
+ document.getElementById("rv").onclick=review;document.getElementById("again").onclick=intro;
+}
+let sw=0,active=false,away=false,micAsk=false,log={};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $=id=>document.getElementById(id);
+function modal(t,p,btns,note){$("mt").textContent=t;$("mp").textContent=p;$("mn").textContent=note||"";const b=$("mb");b.innerHTML="";btns.forEach(([l,f,c])=>{const x=document.createElement("button");x.textContent=l;x.className=c||"sec";x.onclick=()=>{$("modal").hidden=true;if(f)f()};b.appendChild(x)});$("modal").hidden=false;if(b.firstChild)b.firstChild.focus()}
+// ---- tab-departure check: 1st = warning, 2nd = restart ----
+function leave(){if(active&&!away&&!micAsk)away=true}
+function back(){if(!away)return;away=false;if(!active)return;sw++;
+ if(sw===1)modal("⚠️ Warning","Warning: You left the activity page. If you leave again, your activity will restart and your answers will be cleared.",[["I understand",null,"sec"]],"This check is not perfect. Browser limits and some interruptions (such as pop-ups) can affect it.");
+ else resetAll("You left the activity page for a second time, so the activity has restarted and your answers have been cleared. Please start again and stay on this page.")}
+document.addEventListener("visibilitychange",()=>{document.hidden?leave():back()});
+window.addEventListener("blur",()=>setTimeout(()=>{if(active&&!document.hidden&&!document.hasFocus())leave()},300));
+window.addEventListener("focus",()=>{if(!document.hidden)back()});
+function resetAll(msg){if(TTS)speechSynthesis.cancel();if(mr&&mr.state==="recording"){mr.onstop=null;mr.stop()}if(stream)stream.getTracks().forEach(t=>t.stop());Object.values(recs).forEach(u=>URL.revokeObjectURL(u));Object.values(log).forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});W=ALL;i=0;res=[];recs={};log={};sw=0;away=false;active=false;intro();if(msg)modal("Activity restarted",msg,[["OK",null,"sec"]])}
+$("reset").onclick=()=>modal("Reset the activity?","Your score, recordings, answers and tab-switch count will be cleared and you will return to the start.",[["Cancel",null,"sec"],["Yes, reset",()=>resetAll(),"sec"]]);
+// ---- Final Review + PDF (browser print → Save as PDF) ----
+function review(){
+ active=false;
+ const L=w=>log[w[1]]||{},ans=ALL.filter(w=>L(w).answered).length,rec=ALL.filter(w=>L(w).url).length,d=new Date(),iso=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+ const rows=ALL.map((w,k)=>{const l=L(w);return`<tr><td>${k+1}</td><td>${esc(w[0])}</td><td><b>${w[1]}</b></td><td>${l.answered?"Audio "+l.sel+": “"+esc(l.selText)+"”":l.skipped?"<b>SKIPPED – NOT ANSWERED</b>":"<b>NOT ANSWERED</b>"}</td><td>${l.url?"Recorded":"No recording"}${l.url?` <a class="noprint" href="${l.url}" download="${w[1]}.${l.ext}">Save audio</a>`:""}</td></tr>`}).join("");
+ app.innerHTML=`<div class="noprint"><div class="note"><b>How to hand in:</b><br>1. Fill in your name, class/form and date.<br>2. Press <b>Download My Responses (PDF)</b>. In the print window choose <b>Save as PDF</b> (on a Mac: click the <b>PDF</b> menu at the bottom-left, then <b>Save as PDF</b>).<br>3. Upload the PDF to the correct <b>Google Classroom assignment</b>. This activity cannot upload it for you.</div>
+ <label for="fn"><b>Name</b></label><input type="text" id="fn" value="${name==="Student"?"":esc(name)}"><label for="fc"><b>Class / form</b></label><input type="text" id="fc" placeholder="e.g. Year 10A"><label for="fd"><b>Date</b></label><input type="date" id="fd" value="${iso}"></div>
+ <div id="sheet"><h2 style="color:var(--tealD)">Sound Detective — Final Review</h2>
+ <p><b>Student:</b> <span id="sn">—</span> &nbsp; <b>Class/form:</b> <span id="sc2">—</span> &nbsp; <b>Date:</b> <span id="sd">—</span></p>
+ <p><b>Completion:</b> ${ans===ALL.length?"All questions answered":"<b>Not all questions answered</b>"} (${ans} of ${ALL.length}) · Skipped and left unanswered: ${ALL.filter(w=>!L(w).answered&&L(w).skipped).length} · Recordings made: ${rec} of ${ALL.length} · Page departures detected: ${sw}<br><span id="sg"></span></p>
+ <div class="tw"><table><tr><th>#</th><th>Sound group</th><th>Word</th><th>Answer selected</th><th>Recording</th></tr>${rows}</table></div>
+ <p style="font-size:12px">Audio recordings cannot be included in the PDF.</p></div>
+ <div class="noprint"><button class="start" id="dl">Download My Responses (PDF)</button><button class="sec" id="bk" style="width:100%;margin-top:10px">← Back to my results</button></div>`;
+ const upd=()=>{$("sn").textContent=$("fn").value.trim()||"—";$("sc2").textContent=$("fc").value.trim()||"—";$("sd").textContent=$("fd").value||"—"};
+ ["fn","fc","fd"].forEach(x=>$(x).oninput=upd);upd();
+ $("bk").onclick=summary;
+ $("dl").onclick=()=>{upd();const n=$("fn").value.trim(),c=$("fc").value.trim();
+  if(!n||!c||!$("fd").value){modal("Please complete your details","Fill in your name, class/form and date before saving your PDF.",[["OK",null,"sec"]]);return}
+  if(typeof window.print!=="function"){modal("Printing is not available","Your browser cannot open the print window. Try Chrome or Safari, or take screenshots of this page to upload.",[["OK",null,"sec"]]);return}
+  const old=document.title;document.title="SoundDetective_"+n.replace(/[\\\/:*?"<>|\s]+/g,"_")+"_"+c.replace(/[\\\/:*?"<>|\s]+/g,"_");$("sg").textContent="Saved: "+new Date().toLocaleString();
+  window.onafterprint=()=>{document.title=old};window.print()}}
+if(TTS){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;setTimeout(loadVoices,500);setTimeout(loadVoices,1500);document.getElementById("rt").onchange=e=>{rate=+e.target.value};document.getElementById("vt").onclick=()=>speak("Hello! This is how I sound. Success, science, beautiful.")}else document.getElementById("vbar").style.display="none";
+intro();
+</script>
+</body>
+</html>
